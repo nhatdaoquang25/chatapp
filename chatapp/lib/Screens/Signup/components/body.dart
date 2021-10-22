@@ -9,6 +9,7 @@ import 'package:chatapp/methods.dart';
 import 'package:flutter/material.dart';
 
 import 'package:flutter_svg/svg.dart';
+import 'package:form_field_validator/form_field_validator.dart';
 
 import 'background.dart';
 import 'or_divider.dart';
@@ -25,109 +26,119 @@ class _BodyState extends State<Body> {
 
   final TextEditingController _password = TextEditingController();
   bool isLoading = false;
+  final _formKey = GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
     return Background(
       child: SingleChildScrollView(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Text(
-              "SIGNUP",
-              style: TextStyle(fontWeight: FontWeight.bold),
-            ),
-            SizedBox(height: size.height * 0.03),
-            SvgPicture.asset(
-              "assets/icons/signup.svg",
-              height: size.height * 0.35,
-            ),
-            RoundedInputField(
-              controller: _name,
-              hintText: "Your Name",
-              onChanged: (value) {},
-            ),
-            RoundedInputField(
-              controller: _email,
-              hintText: "Your Email",
-              onChanged: (value) {},
-            ),
-            RoundedPasswordField(
-              controller: _password,
-              onChanged: (value) {},
-            ),
-            isLoading
-                ? CircularProgressIndicator()
-                : RoundedButton(
-                    text: "SIGNUP",
-                    press: () {
-                      if (_name.text.isNotEmpty &&
-                          _email.text.isNotEmpty &&
-                          _password.text.isNotEmpty) {
-                        setState(() {
-                          isLoading = true;
-                        });
-                        createAccount(_name.text, _email.text, _password.text)
-                            .then((user) {
-                          if (user != null) {
-                            setState(() {
-                              isLoading = false;
-                            });
+        child: Form(
+          autovalidate: true,
+          key: _formKey,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              Text(
+                "SIGNUP",
+                style: TextStyle(fontWeight: FontWeight.bold),
+              ),
+              SizedBox(height: size.height * 0.03),
+              SvgPicture.asset(
+                "assets/icons/signup.svg",
+                height: size.height * 0.35,
+              ),
+              RoundedInputField(
+                controller: _name,
+                hintText: "Your Name",
+                validator: RequiredValidator(errorText: "Required*"),
+              ),
+              RoundedInputField(
+                controller: _email,
+                hintText: "Your Email",
+                validator: MultiValidator([
+                  RequiredValidator(errorText: "Required*"),
+                  EmailValidator(errorText: "Not A Valid Email")
+                ]),
+              ),
+              RoundedPasswordField(
+                  controller: _password,
+                  validator: MultiValidator([
+                    RequiredValidator(errorText: "Required*"),
+                    MinLengthValidator(6,
+                        errorText: "Should be at least 6 characters")
+                  ])),
+              isLoading
+                  ? CircularProgressIndicator()
+                  : RoundedButton(
+                      text: "SIGNUP",
+                      press: () {
+                        if (_formKey.currentState.validate()) {
+                          setState(() {
+                            isLoading = true;
+                          });
+                          createAccount(_name.text.toLowerCase(), _email.text,
+                                  _password.text)
+                              .then((user) {
+                            if (user != null) {
+                              setState(() {
+                                isLoading = false;
+                              });
 
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (_) => HomeScreen()));
-                            print("loading succ");
-                          } else {
-                            setState(() {
-                              isLoading = false;
-                            });
-                            Scaffold.of(context).showSnackBar(SnackBar(
-                              content: Text("Can not Create Login"),
-                              backgroundColor: Theme.of(context).errorColor,
-                            ));
-                          }
-                        });
-                      } else {
-                        print("Please enter full");
-                      }
-                    },
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (_) => HomeScreen()));
+                              print("loading succ");
+                            } else {
+                              setState(() {
+                                isLoading = false;
+                              });
+                              Scaffold.of(context).showSnackBar(SnackBar(
+                                content: Text("Can not Create Login"),
+                                backgroundColor: Theme.of(context).errorColor,
+                              ));
+                            }
+                          });
+                        } else {
+                          print("Please enter full");
+                        }
+                      },
+                    ),
+              SizedBox(height: size.height * 0.03),
+              AlreadyHaveAnAccountCheck(
+                login: false,
+                press: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) {
+                        return LoginScreen();
+                      },
+                    ),
+                  );
+                },
+              ),
+              OrDivider(),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  SocalIcon(
+                    iconSrc: "assets/icons/facebook.svg",
+                    press: () {},
                   ),
-            SizedBox(height: size.height * 0.03),
-            AlreadyHaveAnAccountCheck(
-              login: false,
-              press: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) {
-                      return LoginScreen();
-                    },
+                  SocalIcon(
+                    iconSrc: "assets/icons/twitter.svg",
+                    press: () {},
                   ),
-                );
-              },
-            ),
-            OrDivider(),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                SocalIcon(
-                  iconSrc: "assets/icons/facebook.svg",
-                  press: () {},
-                ),
-                SocalIcon(
-                  iconSrc: "assets/icons/twitter.svg",
-                  press: () {},
-                ),
-                SocalIcon(
-                  iconSrc: "assets/icons/google-plus.svg",
-                  press: () {},
-                ),
-              ],
-            )
-          ],
+                  SocalIcon(
+                    iconSrc: "assets/icons/google-plus.svg",
+                    press: () {},
+                  ),
+                ],
+              )
+            ],
+          ),
         ),
       ),
     );
