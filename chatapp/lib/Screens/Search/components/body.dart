@@ -64,7 +64,7 @@ class _BodyState extends State<Body> {
             child: TextField(
               controller: _search,
               decoration: InputDecoration(
-                hintText: "Search",
+                hintText: "Enter your name",
                 border:
                     OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
               ),
