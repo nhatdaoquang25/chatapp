@@ -1,4 +1,4 @@
-import 'package:chatapp/Screens/Home/home_screen.dart';
+import 'package:chatapp/Screens/Home/HomeScreen.dart';
 import 'package:chatapp/Screens/Login/login_screen.dart';
 import 'package:chatapp/Screens/Signup/components/social_icon.dart';
 import 'package:chatapp/components/already_have_an_account_acheck.dart';

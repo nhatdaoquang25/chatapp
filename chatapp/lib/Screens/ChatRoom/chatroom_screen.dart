@@ -7,14 +7,17 @@ import 'package:flutter/material.dart';
 import 'components/message.dart';
 
 class ChatRoomScreen extends StatelessWidget {
-  final Map<String, dynamic> userMap;
+   List members =[];
   final String chatRoomId;
+  final String name;
 
   final TextEditingController _message = TextEditingController();
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final FirebaseAuth _auth = FirebaseAuth.instance;
 
-  ChatRoomScreen({Key key, this.userMap, this.chatRoomId}) : super(key: key);
+   ChatRoomScreen({Key key, this.chatRoomId, this.members, this.name}) : super(key: key);
+
+
 
   void onSendMessage() async {
     if (_message.text.isNotEmpty) {
@@ -38,7 +41,7 @@ class ChatRoomScreen extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(userMap['name']),
+        title: Text(name),
       ),
       body: buildSendMessage(size),
     );

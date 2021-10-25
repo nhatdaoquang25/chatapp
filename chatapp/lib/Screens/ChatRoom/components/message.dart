@@ -15,7 +15,11 @@ Widget message(Size size, Map<String, dynamic> map, BuildContext context) {
       padding: EdgeInsets.symmetric(vertical: 12, horizontal: 10),
       margin: EdgeInsets.symmetric(vertical: 5, horizontal: 8),
       decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(15), color: kPrimaryColor),
+        borderRadius: BorderRadius.circular(15),
+        color: map['sendby'] == _auth.currentUser.displayName
+            ? kPrimaryColor
+            : Colors.blue,
+      ),
       child: Text(
         map['message'],
         style: TextStyle(color: Colors.white),
