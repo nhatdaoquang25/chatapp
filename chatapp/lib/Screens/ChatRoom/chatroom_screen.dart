@@ -7,7 +7,7 @@ import 'package:flutter/material.dart';
 import 'components/message.dart';
 
 class ChatRoomScreen extends StatelessWidget {
-   List members =[];
+  List members = [];
   final String chatRoomId;
   final String name;
 
@@ -15,9 +15,8 @@ class ChatRoomScreen extends StatelessWidget {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final FirebaseAuth _auth = FirebaseAuth.instance;
 
-   ChatRoomScreen({Key key, this.chatRoomId, this.members, this.name}) : super(key: key);
-
-
+  ChatRoomScreen({Key key, this.chatRoomId, this.members, this.name})
+      : super(key: key);
 
   void onSendMessage() async {
     if (_message.text.isNotEmpty) {

@@ -19,6 +19,7 @@ class _BodyState extends State<Body> {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   FirebaseFirestore firestore = FirebaseFirestore.instance;
 
+// on search
   void onSearch() async {
     setState(() {
       isLoading = true;
@@ -64,9 +65,13 @@ class _BodyState extends State<Body> {
             child: TextField(
               controller: _search,
               decoration: InputDecoration(
+                filled: true,
+                fillColor: Colors.white,
                 hintText: "Enter your name",
-                border:
-                    OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
+                hintStyle: TextStyle(color: Colors.grey),
+                border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10),
+                    borderSide: BorderSide(color: Colors.grey)),
               ),
             ),
           ),
@@ -77,7 +82,7 @@ class _BodyState extends State<Body> {
         isLoading
             ? CircularProgressIndicator()
             : Container(
-                width: MediaQuery.of(context).size.width / 3.5,
+                width: MediaQuery.of(context).size.width / 2.5,
                 child: RoundedButton(
                   press: onSearch,
                   text: "Search",
